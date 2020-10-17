@@ -21,36 +21,38 @@ connection.connect(err => {
 afterConnection = () => {
    inquirer
    .prompt({
-       name: 'choices',
+       name: 'choice',
        type: 'list',
        message: 'What would you like to do?',
        choices: [
            'View all Employees',
-           'View all Employees by Department',
-           'View all Employees by Manager',
+           'View all Departments',
+           'View all Roles',
            'Add Employee',
            'Remove Employee',
            'Update Employee Role',
            'Update Employee Manager',
            'Quit'
        ]
-    }).then(choices =>{
-        if ('View all Employees'){
+    }).then(answer =>{
+        console.log(answer);
+        
+        if (answer.choice === 'View all Employees'){
             viewEmployees();
         }
-        else if ('View all Employees by Department'){
-            viewDepartment();
+        else if (answer.choice === 'View all Departments'){
+            viewDepartments();
         }
-        else if ('View all Employees by Manager'){
-            viewManager();
+        else if (answer.choice === 'View all Roles'){
+            viewRoles();
         }
-        else if ('Add Employee'){
+        else if (answer.choice ==='Add Employee'){
             addEmployee();
         }
-        else if ('Update Employee Role'){
+        else if (answer.choice ==='Update Employee Role'){
             updateRole();
         }
-        else if ('Update Employee Manager'){
+        else if (answer.choice ==='Update Employee Manager'){
             updateManager();
         }
         else {
@@ -68,8 +70,26 @@ function viewEmployees() {
     let query = "SELECT * FROM employee;";
     connection.query(query, function(err, res) {
     if (err) throw err;
-    console.log(res.length + " employees found!");
-    console.table('All Employees:', res); 
+    console.table(res); 
     
-    })
-}
+    });
+};
+
+function viewDepartments() {
+    console.log("Whhaaaaat");
+    let query = "SELECT * FROM department";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      
+    });
+  };
+
+  function viewRoles() {
+    let query = "SELECT * FROM role";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.table(res);
+    });
+  }
+
