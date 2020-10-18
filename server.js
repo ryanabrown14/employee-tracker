@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
-const { type } = require('os');
+
 
 
 
@@ -74,7 +74,8 @@ function viewEmployees() {
     let query = "SELECT * FROM employee;";
     connection.query(query, function(err, res) {
     if (err) throw err;
-    console.table(res); 
+    console.table(res);
+    afterConnection(); 
     
     });
 };
@@ -85,6 +86,7 @@ function viewDepartments() {
     connection.query(query, function(err, res) {
       if (err) throw err;
       console.table(res);
+      afterConnection();
       
     });
   };
@@ -94,6 +96,7 @@ function viewDepartments() {
     connection.query(query, function(err, res) {
       if (err) throw err;
       console.table(res);
+      afterConnection();
     });
   };
 
@@ -123,6 +126,7 @@ function viewDepartments() {
       ]).then (answer =>{
         connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleId, answer.managerId], function(err, res){
             if (err) throw err;
+            afterConnection();
 
         }); 
     });
@@ -137,6 +141,7 @@ function viewDepartments() {
       }).then (answer => {
         connection.query('INSERT INTO department (name) VALUES (?)', [answer.department], function(err, res){
             if (err) throw err;
+            afterConnection();
 
         });
       });
@@ -163,6 +168,7 @@ function viewDepartments() {
     ]).then(answer =>{
         connection.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?)', [answer.name, answer.salary, answer.deptId], function(err, res) {
             if (err) throw err;
+            afterConnection();
         });
     });
   };
@@ -183,11 +189,12 @@ function viewDepartments() {
       ]).then(answer => {
           connection.query('UPDATE employee SET role_id=? WHERE id=?', [answer.newRoleId, answer.empId], function(err, res) {
             if (err) throw err;
+            afterConnection();
           });
       })
 
   };
   function end(){
-
+    process.exit()
   };
 
