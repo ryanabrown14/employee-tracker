@@ -13,6 +13,7 @@
 ## Description
 
   This Project uses Node and SQL to create an application that allows you to view and edit employees in a database.
+  You can view how it works here => https://drive.google.com/file/d/1RrCOtL1kbLE4TzubbKDTEHhZHRyug4tt/preview
 
 ## Installation 
 
