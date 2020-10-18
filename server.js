@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
+const { type } = require('os');
 
 
 
@@ -29,9 +30,9 @@ afterConnection = () => {
            'View all Departments',
            'View all Roles',
            'Add Employee',
-           'Remove Employee',
+           'Add a Department',
+           'Add a Role',
            'Update Employee Role',
-           'Update Employee Manager',
            'Quit'
        ]
     }).then(answer =>{
@@ -49,11 +50,14 @@ afterConnection = () => {
         else if (answer.choice ==='Add Employee'){
             addEmployee();
         }
+        else if (answer.choice ==='Add a Department'){
+            addDepartment();
+        }
+        else if (answer.choice ==='Add a Role'){
+            addRole();
+        }
         else if (answer.choice ==='Update Employee Role'){
             updateRole();
-        }
-        else if (answer.choice ==='Update Employee Manager'){
-            updateManager();
         }
         else {
             end();
@@ -76,7 +80,7 @@ function viewEmployees() {
 };
 
 function viewDepartments() {
-    console.log("Whhaaaaat");
+    //console.log("test");
     let query = "SELECT * FROM department";
     connection.query(query, function(err, res) {
       if (err) throw err;
@@ -91,5 +95,99 @@ function viewDepartments() {
       if (err) throw err;
       console.table(res);
     });
-  }
+  };
+
+  function addEmployee(){
+      inquirer.prompt([
+          {
+              type: 'input',
+              name: 'firstName',
+              message: 'New Employees First Name'
+
+          },
+          {
+            type: 'input',
+            name: 'lastName',
+            message:'New Employees Last Name?'
+          },
+          {
+              type:'input',
+              name: 'roleId',
+              message: 'Employees Role ID number'
+          },
+          {
+              type:'input',
+              name: 'managerId',
+              message: 'New Employees Manger ID'
+          }
+      ]).then (answer =>{
+        connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleId, answer.managerId], function(err, res){
+            if (err) throw err;
+
+        }); 
+    });
+
+  };
+
+  function addDepartment(){
+      inquirer.prompt({
+          type:'input',
+          name: 'department',
+          message: 'New Departments name' 
+      }).then (answer => {
+        connection.query('INSERT INTO department (name) VALUES (?)', [answer.department], function(err, res){
+            if (err) throw err;
+
+        });
+      });
+
+  };
+
+  function addRole(){
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'New Roles Name'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'New Roles Salary'
+        },
+        {
+            type: 'input',
+            name: 'deptId',
+            message: 'New Roles Department ID'
+        }
+    ]).then(answer =>{
+        connection.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?)', [answer.name, answer.salary, answer.deptId], function(err, res) {
+            if (err) throw err;
+        });
+    });
+  };
+
+  function updateRole(){
+      inquirer.prompt([
+          {
+              type: 'input',
+              name: 'empId',
+              message: 'The Employee Id of the Employee'
+          },
+          {
+              type: 'input',
+              name: 'newRoleId',
+              message: 'New Role Id'
+          }
+
+      ]).then(answer => {
+          connection.query('UPDATE employee SET role_id=? WHERE id=?', [answer.newRoleId, answer.empId], function(err, res) {
+            if (err) throw err;
+          });
+      })
+
+  };
+  function end(){
+
+  };
 
